@@ -25,6 +25,8 @@
 
 ## 开始
 
+GitHub Actions 构建入口见 [CI 构建说明](docs/actions.md)。已接入容量预检、源码同步、systemimage 构建和日志/镜像上传；能否执行完整编译取决于 Runner 资源，构建结果以实际运行日志为准。
+
 阅读 [构建准备](docs/build.md)、[适配状态](docs/status.md) 和 [恢复边界](docs/recovery.md)。
 
 本仓库的新代码与文档采用 MIT 许可；外部 AOSP 和厂商组件保留各自许可。项目与 Xiaomi、MediaTek 和 Google 无隶属关系。

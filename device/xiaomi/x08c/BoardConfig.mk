@@ -1,11 +1,15 @@
+include build/make/target/board/treble_common_32.mk
+
 TARGET_ARCH := arm
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a53
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_KERNEL := true
 TARGET_USES_64_BIT_BINDER := true
 TARGET_COPY_OUT_VENDOR := vendor
-TARGET_SYSTEM_PROP := device/xiaomi/x08c/system.prop
+TARGET_SYSTEM_PROP += device/xiaomi/x08c/system.prop
 TARGET_OTA_ASSERT_DEVICE := mi_x08c,x08c
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4

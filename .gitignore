@@ -1,5 +1,6 @@
 /aosp/
 /out/
+/.ccache/
 /private/
 /artifacts/
 /local/

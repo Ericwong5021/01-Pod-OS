@@ -1,4 +1,4 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_32_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/treble_common_32.mk)
 $(call inherit-product, device/xiaomi/x08c/device.mk)
 
 PRODUCT_NAME := x08c

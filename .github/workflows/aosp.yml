@@ -1,0 +1,68 @@
+name: AOSP Android 9 system image
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: Runner label; full builds require at least 300 GiB free
+        type: choice
+        options:
+          - ubuntu-22.04
+          - aosp-builder
+        default: ubuntu-22.04
+permissions:
+  contents: read
+concurrency:
+  group: aosp-build
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 350
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate configuration and runner capacity
+        run: |
+          mkdir -p artifacts
+          set -o pipefail
+          python3 tools/preflight.py | tee artifacts/preflight.log
+      - uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: aosp9-ccache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('upstream.lock.json', 'ci/Dockerfile') }}-${{ github.sha }}
+          restore-keys: |
+            aosp9-ccache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('upstream.lock.json', 'ci/Dockerfile') }}-
+      - name: Build toolchain container
+        run: |
+          set -o pipefail
+          docker build -t pod-aosp9 ci 2>&1 | tee artifacts/container.log
+      - name: Sync pinned source and compile system image
+        run: |
+          mkdir -p aosp .ccache
+          set -o pipefail
+          docker run --rm --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp/pod-home \
+            -e GITHUB_RUN_ID \
+            -v "$PWD:/workspace" -w /workspace \
+            pod-aosp9 bash tools/build.sh 2>&1 | tee artifacts/build.log
+      - name: Upload build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aosp9-evidence-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload unvalidated system candidate
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: x08c-system-unvalidated-${{ github.sha }}
+          path: aosp/out/target/product/x08c/system.img
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
