@@ -1,0 +1,8 @@
+{
+  "manifest_url": "https://android.googlesource.com/platform/manifest",
+  "tag": "android-9.0.0_r61",
+  "tag_object": "fb04d15249bd2b6cd63aea9f03f7d7afd5d681c3",
+  "manifest_commit": "3564dc0e96454f300e34543781448fa4185682c5",
+  "api": 28,
+  "status": "selected baseline; full source sync and build not performed"
+}
